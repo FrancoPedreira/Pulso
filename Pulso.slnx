@@ -1,3 +1,6 @@
 <Solution>
+  <Project Path="Pulso.Api/Pulso.Api.csproj" />
+  <Project Path="Pulso.Application/Pulso.Application.csproj" />
   <Project Path="Pulso.Domain/Pulso.Domain.csproj" />
+  <Project Path="Pulso.Infrastructure/Pulso.Infrastructure.csproj" />
 </Solution>

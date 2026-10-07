@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Pulso.Domain\Pulso.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
