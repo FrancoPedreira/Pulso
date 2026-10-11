@@ -1,4 +1,5 @@
-﻿using Pulso.Application.Interfaces;
+﻿using Pulso.Application.DTOs;
+using Pulso.Application.Interfaces;
 using Pulso.Domain;
 using Pulso.Domain.Exceptions;
 
@@ -10,7 +11,7 @@ public class ReservaService(IReservaRepository reservaRepository, IClaseReposito
     private readonly IClaseRepository _claseRepository = claseRepository;
     private readonly IUsuarioRepository _usuarioRepository = usuarioRepository;
 
-    public void Reservar(int claseId, string email)
+    public ReservaDto Reservar(int claseId, string email)
     {
         email = Usuario.NormalizarEmail(email);
 
@@ -29,6 +30,9 @@ public class ReservaService(IReservaRepository reservaRepository, IClaseReposito
             throw new ReglaNegocioException("El usuario ya tiene una reserva activa para esta clase.");
 
         var reserva = new Reserva(clase, usuario, DateTime.Now);
+
         _reservaRepository.Agregar(reserva);
+
+        return ReservaDto.TransformarADto(reserva);
     }
 }
