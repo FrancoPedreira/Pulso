@@ -1,7 +1,5 @@
 ﻿using Pulso.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Pulso.Domain.Exceptions;
 
 namespace Pulso.Domain;
 public class Clase
@@ -30,7 +28,7 @@ public class Clase
     public void Cancelar()
     {
         if (Estado is EstadoClase.Cancelada)
-            throw new InvalidOperationException("La clase ya está cancelada.");
+            throw new ReglaNegocioException("La clase ya está cancelada.");
 
         Estado = EstadoClase.Cancelada;
     }
