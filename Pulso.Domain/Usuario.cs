@@ -12,7 +12,7 @@ public class Usuario
 
     public Usuario(string nombre, string apellido, string email)
     {
-        var emailLimpio = email?.Trim().ToLower();
+        email = NormalizarEmail(email);
 
         if (string.IsNullOrWhiteSpace(nombre))
             throw new ArgumentException("El nombre no puede estar vacío.", nameof(nombre));
@@ -22,15 +22,20 @@ public class Usuario
             throw new ArgumentException("El email no puede estar vacío.", nameof(email));
         Nombre = nombre.Trim();
         Apellido = apellido.Trim();
-        if (!EmailValido(emailLimpio))
+        if (!EmailValido(email))
             throw new ArgumentException("El email no es válido.", nameof(email));
-        Email = emailLimpio;
-        Reservas = new List<Reserva>();
+        Email = email;
+        Reservas = [];
     }
 
     private static bool EmailValido(string email)
     {
         string regex = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
         return Regex.IsMatch(email, regex);
+    }
+
+    public static string NormalizarEmail(string email)
+    {
+        return email?.Trim().ToLower() ?? throw new ArgumentException("El email no puede ser nulo.", nameof(email));
     }
 }
