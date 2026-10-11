@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+  </Folder>
   <Project Path="Pulso.Api/Pulso.Api.csproj" />
   <Project Path="Pulso.Application/Pulso.Application.csproj" />
   <Project Path="Pulso.Domain/Pulso.Domain.csproj" />
