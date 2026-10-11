@@ -1,4 +1,5 @@
 ﻿using Pulso.Domain.Enums;
+using Pulso.Domain.Exceptions;
 
 namespace Pulso.Domain;
 public class Reserva
@@ -18,9 +19,9 @@ public class Reserva
         if (usuario is null)
             throw new ArgumentNullException(nameof(usuario), "El usuario no puede ser nulo.");
         if (clase.YaComenzo(ahora))
-            throw new InvalidOperationException("La clase ya ha comenzado.");
+            throw new ReglaNegocioException("La clase ya ha comenzado.");
         if (clase.Estado is EstadoClase.Cancelada)
-            throw new InvalidOperationException("No se puede reservar una clase cancelada.");
+            throw new ReglaNegocioException("No se puede reservar una clase cancelada.");
         Clase = clase;
         Usuario = usuario;
         FechaReserva = ahora;
@@ -30,11 +31,11 @@ public class Reserva
     public void Cancelar(DateTime ahora)
     {
         if (Estado is EstadoReserva.Cancelada)
-            throw new InvalidOperationException("La reserva ya está cancelada.");
+            throw new ReglaNegocioException("La reserva ya está cancelada.");
         if (Clase.YaComenzo(ahora))
-            throw new InvalidOperationException("No se puede cancelar la reserva, la clase ya ha comenzado.");
+            throw new ReglaNegocioException("No se puede cancelar la reserva, la clase ya ha comenzado.");
         if (Clase.Fecha.AddHours(-2) <= ahora)
-            throw new InvalidOperationException("No se puede cancelar la reserva, faltan menos de 2 horas para que comience la clase.");
+            throw new ReglaNegocioException("No se puede cancelar la reserva, faltan menos de 2 horas para que comience la clase.");
 
         Estado = EstadoReserva.Cancelada;
     }
