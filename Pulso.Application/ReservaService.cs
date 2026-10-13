@@ -1,38 +1,38 @@
-﻿using Pulso.Application.DTOs;
-using Pulso.Application.Interfaces;
+using Pulso.Application.DTOs;
 using Pulso.Domain;
 using Pulso.Domain.Exceptions;
+using Pulso.Domain.Interfaces;
+using Pulso.Domain.ValueObjects;
 
 namespace Pulso.Application;
 
-public class ReservaService(IReservaRepository reservaRepository, IClaseRepository claseRepository, IUsuarioRepository usuarioRepository)
+public class ReservaService(IReservaRepository reservaRepository, IClaseRepository claseRepository, IUsuarioRepository usuarioRepository, IUnitOfWork unitOfWork)
 {
     private readonly IReservaRepository _reservaRepository = reservaRepository;
     private readonly IClaseRepository _claseRepository = claseRepository;
     private readonly IUsuarioRepository _usuarioRepository = usuarioRepository;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-    public ReservaDto Reservar(int claseId, string email)
+    public async Task<ReservaDto> ReservarAsync(ReservarRequest request)
     {
-        email = Usuario.NormalizarEmail(email);
+        var clase = _claseRepository.ObtenerPorId(request.ClaseId) ?? throw new ClaseNotFoundException();
 
-        if (string.IsNullOrWhiteSpace(email))
-            throw new ArgumentException("El email esta vacio o no es valido.", nameof(email));
-
-        var clase = _claseRepository.ObtenerPorId(claseId) ?? throw new NotFoundException("La clase que quiere reservar no existe.");
-
-        int cantidadReservasActivas = _reservaRepository.ContarReservasActivas(claseId);
+        int cantidadReservasActivas = _reservaRepository.ContarReservasActivas(clase.ClaseId);
         if (cantidadReservasActivas >= clase.CupoMaximo)
-            throw new ReglaNegocioException("No se puede reservar la clase, ya se alcanzó el límite de reservas activas.");
+            throw new CupoLimiteException();
 
-        var usuario = _usuarioRepository.ObtenerPorEmail(email) ?? throw new NotFoundException("El usuario que intenta reservar no existe.");
+        var usuario = _usuarioRepository.ObtenerPorEmail(request.Email) ?? throw new EmailNotFoundException();
 
-        if (_reservaRepository.ExisteReservaActiva(claseId, usuario.UsuarioId))
-            throw new ReglaNegocioException("El usuario ya tiene una reserva activa para esta clase.");
+        if (_reservaRepository.ExisteReservaActiva(clase.ClaseId, usuario.UsuarioId))
+            throw new ReservaActivaExistenteException();
 
         var reserva = new Reserva(clase, usuario, DateTime.Now);
 
         _reservaRepository.Agregar(reserva);
 
+        await _unitOfWork.GuardarCambiosAsync();
+
         return ReservaDto.TransformarADto(reserva);
     }
 }
+public record ReservarRequest(ClaseId ClaseId, Email Email);

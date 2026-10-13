@@ -1,10 +1,12 @@
 ﻿using Pulso.Domain.Enums;
 using Pulso.Domain.Exceptions;
+using Pulso.Domain.ValueObjects;
 
 namespace Pulso.Domain;
+
 public class Clase
 {
-    public int ClaseId { get; private set; }
+    public ClaseId ClaseId { get; private set; }
     public string Nombre { get; private set; }
     public DateTime Fecha { get; private set; }
     public List<Reserva> Reservas { get; private set; }
