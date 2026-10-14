@@ -1,6 +1,7 @@
+using Pulso.Domain;
 using Pulso.Domain.ValueObjects;
 
-namespace Pulso.Domain.Interfaces;
+namespace Pulso.Application.Interfaces;
 
 public interface IReservaRepository
 {

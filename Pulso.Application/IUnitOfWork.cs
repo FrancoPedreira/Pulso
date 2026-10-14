@@ -1,4 +1,4 @@
-﻿using Pulso.Domain.Interfaces;
+﻿using Pulso.Application.Interfaces;
 
 namespace Pulso.Application;
 

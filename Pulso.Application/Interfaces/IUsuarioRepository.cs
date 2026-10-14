@@ -1,4 +1,6 @@
-namespace Pulso.Domain.Interfaces;
+using Pulso.Domain;
+
+namespace Pulso.Application.Interfaces;
 
 public interface IUsuarioRepository
 {
