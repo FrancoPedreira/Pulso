@@ -1,6 +1,13 @@
-﻿namespace Pulso.Application;
+﻿using Pulso.Application.Interfaces;
 
-public interface IUnitOfWork
+namespace Pulso.Application;
+
+public interface IUnitOfWork : IDisposable
 {
+    IReservaRepository ReservaRepository { get; }
+    IClaseRepository ClaseRepository { get; }
+    IUsuarioRepository UsuarioRepository { get; }
+
     Task GuardarCambiosAsync();
+
 }
